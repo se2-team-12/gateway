@@ -1,10 +1,12 @@
 import datetime
 
+main():
+	gwId = 1
+	timestamp = datetime.datetime.now()
 
-gwId = 1
-timestamp = datetime.datetime.now()
+	print("gwId")
+	print(gwId)
+	print("timestamp")
+	print(timestamp)
 
-print("gwId")
-print(gwId)
-print("timestamp")
-print(timestamp)
+main()
