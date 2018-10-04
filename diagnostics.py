@@ -1,16 +1,11 @@
 import datetime
 
-def diagnostics():
-	diagnostic = []
-	gwId = 1
-	diagnostic.append(gwId)
+def main():
 	timestamp = datetime.datetime.now()
-	diagnostic.append(str(timestamp))
 
-
-	print("gwId")
-	print(gwId)
 	print("timestamp")
-	print(str(timestamp))
+	print(timestamp)
 
-diagnostics()
+	return(timestamp)
+
+main()
