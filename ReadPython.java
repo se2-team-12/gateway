@@ -1,27 +1,34 @@
-package com;
+package readPythonCommand;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class ReadPython {
-	public static void main(String args[])
+	public static void readPython()
 	{
 		
 		try{
 			String urlParameters ="";
-			Process p = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/diagnostics.py");
-			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			
-			String ret = in.readLine();
+			//reading GWId file
 			String temp="";
+			Process pGwId = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/gwId.py");
+			BufferedReader inGateway = new BufferedReader(new InputStreamReader(pGwId.getInputStream()));
+			
+			temp+= inGateway.readLine();
+			temp+="=";
+			temp+= inGateway.readLine();
+			
+			//reading diagnostics file 
+			Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/diagnostics.py");
+			BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
+			
+			String reDiagnosticst = inDiagnostics.readLine();
+			
 			int count=0;
-			while(ret != null)
+			while(reDiagnosticst != null)
 			{
-				
-				//System.out.println(""+ ret);
-				if(count%2 == 0 & count != 0)
+				if(count%2 == 0)
 				{
 					temp+="&";
 				}
@@ -29,8 +36,8 @@ public class ReadPython {
 				{
 					temp+="=";
 				}
-				temp+=ret;
-				ret = in.readLine();
+				temp+=reDiagnosticst;
+				reDiagnosticst = inDiagnostics.readLine();
 			
 				count++;
 			}
