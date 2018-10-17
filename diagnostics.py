@@ -1,12 +1,15 @@
-import datetime
+import time
 
-def main():
-	timestamp = datetime.datetime.now()
+options = ['timestamp()']
 
-	print("timestamp")
-	print(timestamp)
+class Diagnostics():
 
-	return(timestamp)
+	def options():
+		global options
+		return options
 
-
-main()
+	def timestamp():
+		timestamp = time.time()
+		print("timestamp")
+		print(timestamp)
+		return timestamp
