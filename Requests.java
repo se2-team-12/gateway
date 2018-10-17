@@ -1,5 +1,4 @@
-package http_requests;
-
+package gatewayController;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
