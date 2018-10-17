@@ -26,8 +26,7 @@ public class MainEventLoop {
 	    			}
 	    			System.out.println(urlParametersJson.toString());
 	    			//String url = "https://balsumae.create.stedwards.edu/cosc3326/insertGateway.php";
-	    			//String url = "https://team12.softwareengineeringii.com/api/gateway";
-	    			String url="https://itsonlytemporary.softwareengineeringii.com/api/gateway";
+	    			String url = "https://team12.softwareengineeringii.com/api/gateway";
 	    			try {
 						System.out.println(http_requests.Requests.sendPost(url, urlParametersJson));
 						String response = http_requests.Requests.sendPost(url, urlParametersJson);
@@ -46,13 +45,13 @@ public class MainEventLoop {
 						if(onDemand)
 						{
 							
-						}*/
+						}
 						
 						String  status= (String) jsonObject.get("Status");
 						if(status.equals("OK"))
 						{
 							System.out.println("status is OK ");
-						}
+						}*/
 						
 					} catch (Exception e) {
 						e.printStackTrace();
