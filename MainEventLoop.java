@@ -1,4 +1,4 @@
-package http_requests;
+package gatewayController;
  
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class MainEventLoop {
 	    			JSONObject urlParametersJson = null;
 	    			try
 	    			{
-	    				urlParametersJson=http_requests.ReadPython.readPython();
+	    				urlParametersJson=gatewayController.ReadPython.readPython();
 	    			} catch (IOException | ParseException e1)
 	    			{
 	    				e1.printStackTrace();
@@ -28,8 +28,8 @@ public class MainEventLoop {
 	    			//String url = "https://balsumae.create.stedwards.edu/cosc3326/insertGateway.php";
 	    			String url = "https://team12.softwareengineeringii.com/api/gateway";
 	    			try {
-						System.out.println(http_requests.Requests.sendPost(url, urlParametersJson));
-						String response = http_requests.Requests.sendPost(url, urlParametersJson);
+						System.out.println(gatewayController.Requests.sendPost(url, urlParametersJson));
+						String response = gatewayController.Requests.sendPost(url, urlParametersJson);
 						//(1) we create an instance of JSONParser
 						//(2)we create a JSONObject by parsing the FileReader of our .json file.
 						//This JSONObject contains a collection of key-value pairs,
@@ -45,13 +45,13 @@ public class MainEventLoop {
 						if(onDemand)
 						{
 							
-						}
+						}*/
 						
 						String  status= (String) jsonObject.get("Status");
 						if(status.equals("OK"))
 						{
 							System.out.println("status is OK ");
-						}*/
+						}
 						
 					} catch (Exception e) {
 						e.printStackTrace();
