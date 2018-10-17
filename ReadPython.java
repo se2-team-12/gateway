@@ -1,4 +1,4 @@
-package http_requests;
+package gatewayController;
 
 
 import java.io.BufferedReader;
@@ -17,12 +17,11 @@ public class ReadPython {
 	{
 		
 		JSONObject json = new JSONObject();
-		//json.put("GatewayId",reeadGatewayControllerID());
-		json.put("GWUID",reeadGatewayControllerID());		
+		json.put("GatewayId",reeadGatewayControllerID());		
 		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/diagnostics.py");
 		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
-		//json.put("TimeStamp",inDiagnostics.readLine());
-		json.put("timestamp",inDiagnostics.readLine());
+		json.put("TimeStamp",inDiagnostics.readLine());
+	
 		
 		return json;
 	}
@@ -51,18 +50,6 @@ public class ReadPython {
 		return gatewayID;
 	}
 	
-	/*@SuppressWarnings("unchecked")
-	public static JSONObject readPython(String nameOfDemand) throws IOException, ParseException 
-	{
-		
-		JSONObject json = new JSONObject();
-		//json.put("GatewayId",reeadGatewayControllerID());
-		json.put("GWId",reeadGatewayControllerID());	
-		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/"+nameOfDemand+".py");
-		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
-		json.put("timestamp",inDiagnostics.readLine());
-		
-		return json;
-	}*/
+	
 
 }
