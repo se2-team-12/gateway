@@ -1,10 +1,12 @@
-import diagnostics
+import cpuCount
+import cpuBattery
+import timestamp
+import memory
 
 
-def test_diagnostic():
+def test_all():
 	print("\n------ Running test_diagnostic... ------")
 	print(" ... ...\n")
-	rv = diagnostics.main()
 	print("----------------------------------------")
 	print("--------------- Results: ---------------")
 	print("\nDiagnostic returned:",rv)
@@ -15,7 +17,7 @@ def test_diagnostic():
 	print("\n---------------------------------------")
 	print("----------------------------------------")
    
-def runTests():
+def menu():
 	print("----------------------------------------")
 	print("-------------  Test Menu:  -------------")
 	print("----------------------------------------")
@@ -42,5 +44,5 @@ def runTests():
 			print("Invalid choice. Try again.\n")
 
 
-runTests()
+menu()
 
