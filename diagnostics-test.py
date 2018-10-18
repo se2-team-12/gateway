@@ -22,11 +22,19 @@ def runTests():
 	op = ""
 	while op != "e":
 		print("Options:")
-		print("1 - test_diagnostics")
+		print("1 - test all")
+		print("2 - test timestamp()")
+		print("3 - test cpuBattery()")
+		print("4 - test cpuCount()")
+		print("5 - test availableMem()")
 		print("e - Exit")
 		op = input("")
 		if(op == "1"):
 			test_diagnostic()
+		elif (op == "2"):
+		elif (op == "3"):
+		elif (op == "4"):
+		elif (op == "5"):
 		elif(op == "e"):
 			print("\nBye!")
 			return
