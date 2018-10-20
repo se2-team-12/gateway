@@ -1,4 +1,4 @@
 # returns battery as a percent
 import psutil
-cpuBattery = psutil.sensors_battery().percent
-print(cpuBattery)
+cpu_battery = psutil.sensors_battery().percent
+print(cpu_battery)
