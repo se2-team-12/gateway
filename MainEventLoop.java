@@ -19,38 +19,32 @@ public class MainEventLoop {
 	    			JSONObject urlParametersJson = null;
 	    			try
 	    			{
-	    				urlParametersJson=gatewayController.ReadPython.readPython();
+	    				urlParametersJson= ReadPython.readPython();
 	    			} catch (IOException | ParseException e1)
 	    			{
 	    				e1.printStackTrace();
 	    			}
 	    			System.out.println(urlParametersJson.toString());
-	    			//String url = "https://balsumae.create.stedwards.edu/cosc3326/insertGateway.php";
 	    			String url = "https://team12.softwareengineeringii.com/api/gateway";
+	  
 	    			try {
-						System.out.println(gatewayController.Requests.sendPost(url, urlParametersJson));
 						String response = gatewayController.Requests.sendPost(url, urlParametersJson);
+						System.out.println("response"+response);
 						//(1) we create an instance of JSONParser
 						//(2)we create a JSONObject by parsing the FileReader of our .json file.
 						//This JSONObject contains a collection of key-value pairs,
 						//from which we can get every value of the json file. 
+						
 						JSONParser jsonParser = new JSONParser();
 						JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
-						// get a boolean from the JSON object
-						/*boolean onDemand = (boolean) jsonObject.get("onDemand");
-						 *String  typeOfDemand = jsonObject.get("typeOfDemand");
-						 *
-						System.out.println("The onDemand is: " + onDemand);
-						
-						if(onDemand)
+						String onDemand = (String)jsonObject.get("ODDType");
+						if(!onDemand.equals(""))
 						{
+							urlParametersJson= ReadPython.readPython(onDemand);
+							System.out.println(urlParametersJson.toString());
+							response = gatewayController.Requests.sendPost(url, urlParametersJson);
+							System.out.println(gatewayController.Requests.sendPost(url, urlParametersJson));
 							
-						}*/
-						
-						String  status= (String) jsonObject.get("Status");
-						if(status.equals("OK"))
-						{
-							System.out.println("status is OK ");
 						}
 						
 					} catch (Exception e) {
@@ -62,8 +56,5 @@ public class MainEventLoop {
 	    ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 	    service.scheduleAtFixedRate(runnable, 0, 5, TimeUnit.SECONDS);	
 	}
-	
-	
-	
 
 }
