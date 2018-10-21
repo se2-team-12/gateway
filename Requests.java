@@ -24,8 +24,8 @@ public class Requests {
 		con.setRequestProperty ("accesstoken", "hello");
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-        con.setRequestProperty("Accept", "application/json");
-      	con.setDoOutput(true);
+        	con.setRequestProperty("Accept", "application/json");
+      		con.setDoOutput(true);
 		
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 		wr.writeBytes(urlParametersJson.toString());
