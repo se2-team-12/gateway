@@ -1,23 +1,31 @@
 package gatewayController;
 
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+
+
 import javax.net.ssl.HttpsURLConnection;
 import org.json.simple.JSONObject;
+
 
 
 public class Requests {
 	// HTTP POST request
 	public static String sendPost(String url, JSONObject  urlParametersJson) throws Exception
 	{
+		
+		 
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 		//add reuqest header
+		con.setRequestProperty ("accesstoken", "hello");
 		con.setRequestMethod("POST");
-		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-		con.setDoOutput(true);
+		con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        con.setRequestProperty("Accept", "application/json");
+      	con.setDoOutput(true);
 		
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 		wr.writeBytes(urlParametersJson.toString());
@@ -41,4 +49,6 @@ public class Requests {
 		//System.out.println(response.toString());
         return response.toString();
 	}
+	
+
 }
