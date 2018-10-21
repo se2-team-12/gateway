@@ -17,17 +17,17 @@ public class ReadPython {
 	{
 		
 		JSONObject json = new JSONObject();
-		json.put("GatewayId",reeadGatewayControllerID());		
+		json.put("GatewayId",reeadGatewayControllerID());	
 		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/diagnostics.py");
 		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
 		json.put("TimeStamp",inDiagnostics.readLine());
-	
+		
 		
 		return json;
 	}
 	
 	
-	private static  String reeadGatewayControllerID()
+	public static  String reeadGatewayControllerID()
 	{
 		String filename = "gatewayID.txt";
 		Scanner inputFile = null;
@@ -50,6 +50,19 @@ public class ReadPython {
 		return gatewayID;
 	}
 	
-	
+	@SuppressWarnings("unchecked")
+	public static JSONObject readPython(String nameOfDemand) throws IOException, ParseException 
+	{
+		JSONObject json = new JSONObject();
+		json.put("GatewayId",reeadGatewayControllerID());
+		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/"+nameOfDemand+".py");
+		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
+		json.put("Type",inDiagnostics.readLine());
+		json.put("Result",inDiagnostics.readLine());
+		json.put("IsClear","true");
+		
+		
+		return json;
+	}
 
 }
