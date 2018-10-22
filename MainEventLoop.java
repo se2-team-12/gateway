@@ -25,7 +25,7 @@ public class MainEventLoop {
 	    				e1.printStackTrace();
 	    			}
 	    			System.out.println(urlParametersJson.toString());
-	    			String url = "https://team12.softwareengineeringii.com/api/gateway";
+	    			String url = "https://team12.softwareengineeringii.com/api/gateway/heartbeat/"+gatewayController.ReadPython.reeadGatewayControllerID();
 	  
 	    			try {
 						String response = gatewayController.Requests.sendPost(url, urlParametersJson);
@@ -37,11 +37,12 @@ public class MainEventLoop {
 						
 						JSONParser jsonParser = new JSONParser();
 						JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
-						String onDemand = (String)jsonObject.get("ODDType");
-						if(!onDemand.equals(""))
+						String onDemand = (String)jsonObject.get("Type");
+						if("cpuCount.py".equals(onDemand)||"memory.py".equals(onDemand)||"cpuBattery.py".equals(onDemand))
 						{
 							urlParametersJson= ReadPython.readPython(onDemand);
 							System.out.println(urlParametersJson.toString());
+							url="https://team12.softwareengineeringii.com/api/gateway/diagnostic/test";
 							response = gatewayController.Requests.sendPost(url, urlParametersJson);
 							System.out.println(gatewayController.Requests.sendPost(url, urlParametersJson));
 							
