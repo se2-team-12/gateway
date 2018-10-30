@@ -1,5 +1,4 @@
-package gatewayController;
- 
+
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -19,16 +18,16 @@ public class MainEventLoop {
 	    			JSONObject urlParametersJson = null;
 	    			try
 	    			{
-	    				urlParametersJson= ReadPython.readPython();
+	    				urlParametersJson=ReadPython.readPython();
 	    			} catch (IOException | ParseException e1)
 	    			{
 	    				e1.printStackTrace();
 	    			}
 	    			System.out.println(urlParametersJson.toString());
-	    			String url = "https://team12.softwareengineeringii.com/api/gateway/heartbeat/"+gatewayController.ReadPython.reeadGatewayControllerID();
+	    			String url = "https://team12.softwareengineeringii.com/api/gateway/heartbeat/"+ReadPython.reeadGatewayControllerID();
 	  
 	    			try {
-						String response = gatewayController.Requests.sendPost(url, urlParametersJson);
+						String response = Requests.sendPost(url, urlParametersJson);
 						System.out.println("response"+response);
 						//(1) we create an instance of JSONParser
 						//(2)we create a JSONObject by parsing the FileReader of our .json file.
@@ -40,11 +39,11 @@ public class MainEventLoop {
 						String onDemand = (String)jsonObject.get("Type");
 						if("cpuCount.py".equals(onDemand)||"memory.py".equals(onDemand)||"cpuBattery.py".equals(onDemand))
 						{
-							urlParametersJson= ReadPython.readPython(onDemand);
+							urlParametersJson=ReadPython.readPython(onDemand);
 							System.out.println(urlParametersJson.toString());
 							url="https://team12.softwareengineeringii.com/api/gateway/diagnostic/test";
-							response = gatewayController.Requests.sendPost(url, urlParametersJson);
-							System.out.println(gatewayController.Requests.sendPost(url, urlParametersJson));
+							response = Requests.sendPost(url, urlParametersJson);
+							System.out.println(Requests.sendPost(url, urlParametersJson));
 
 							
 						}

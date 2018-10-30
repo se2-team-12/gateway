@@ -1,4 +1,3 @@
-package gatewayController;
 
 
 import java.io.BufferedReader;
