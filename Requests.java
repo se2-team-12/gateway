@@ -1,9 +1,8 @@
 
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
+import java.util.Scanner;
 
 
 import javax.net.ssl.HttpsURLConnection;
@@ -20,7 +19,7 @@ public class Requests {
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 		//add reuqest header
-		con.setRequestProperty ("accesstoken", "hello");
+		con.setRequestProperty ("accesstoken", reeadAccessToken());
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
         	con.setRequestProperty("Accept", "application/json");
@@ -47,6 +46,29 @@ public class Requests {
 		//print result
 		//System.out.println(response.toString());
         return response.toString();
+	}
+
+	public static  String reeadAccessToken()
+	{
+		String filename = "token.txt";
+		Scanner inputFile = null;
+		String accessToken="";
+
+		try {
+			inputFile = new Scanner(new File(filename));
+
+		}catch(FileNotFoundException e) {
+			System.out.println("FAILURE cannot open file: " + filename + " for input" +
+					" EXIT ON FAILURE TO OPEN FILE.");
+			System.exit(0);
+		}
+
+		if(inputFile.hasNext())
+		{
+			accessToken = inputFile.next();
+		}
+		inputFile.close();
+		return accessToken;
 	}
 	
 

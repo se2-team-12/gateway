@@ -1,5 +1,8 @@
 
 
+import java.io.File;
+import java.io.FileWriter;
+import java.util.Scanner;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.concurrent.Executors;
@@ -12,6 +15,44 @@ public class MainEventLoop {
 
 	public static void main(String[] args) 
 	{
+
+
+
+        File file = new File("gatewayID.txt");
+
+        if (file.length() == 0) {
+            Scanner reader = new Scanner(System.in);
+            System.out.println("Enter The GatewayId: ");
+            String gwId=reader.nextLine();
+
+            JSONObject urlParametersJson = new JSONObject();
+            urlParametersJson.put("GatewayId",gwId);
+
+            //System.out.println("your json is : "+urlParametersJson);
+            String url = "https://team12.softwareengineeringii.com/api/gateway/auth";
+            String response;
+            try {
+                response = Requests.sendPost(url, urlParametersJson);
+                System.out.println("response"+response);
+
+                JSONParser jsonParser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
+
+                String token = (String)jsonObject.get("accesstoken");
+                try {
+                    File tokenFile = new File("token.txt");
+                    FileWriter fileWriter = new FileWriter(tokenFile);
+                    fileWriter.write(token);
+                    fileWriter.flush();
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+        }
 	   
 		Runnable runnable = new Runnable() {
 	    		public void run() {
