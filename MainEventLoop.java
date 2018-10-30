@@ -45,6 +45,7 @@ public class MainEventLoop {
 							url="https://team12.softwareengineeringii.com/api/gateway/diagnostic/test";
 							response = gatewayController.Requests.sendPost(url, urlParametersJson);
 							System.out.println(gatewayController.Requests.sendPost(url, urlParametersJson));
+
 							
 						}
 						
