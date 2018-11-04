@@ -1,4 +1,5 @@
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -17,32 +18,50 @@ public class MainEventLoop {
 
     public static void main(String[] args)
     {
-
-
-        //register GatewayId and get the token back
+        JSONObject jsonObjectForToken=null;
+        String gwId="";
         File file = new File("gatewayID.txt");
-        if (file.length() == 0) {
+        while(jsonObjectForToken==null && file.length() == 0 )
+        {
+            //register GatewayId and get the token back
 
-            Scanner reader = new Scanner(System.in);
-            System.out.println("Enter The GatewayId: ");
-            String gwId=reader.nextLine();
+            if (file.length() == 0) {
 
-            JSONObject urlParametersJson = new JSONObject();
-            urlParametersJson.put("GatewayId",gwId);
+                Scanner reader = new Scanner(System.in);
+                System.out.println("Enter your Gateway ID: ");
+                gwId=reader.nextLine();
 
-            //System.out.println("your json is : "+urlParametersJson);
-            String url = "https://team12.dev.softwareengineeringii.com/api/gateway/newGateway";
-            String response;
-            try {
-                response = Requests.sendPost(url, urlParametersJson);
-                System.out.println("response"+response);
-                writeToFileGwIdAndToken(gwId,response);
-            } catch (Exception e) {
+                JSONObject urlParametersJson = new JSONObject();
+                urlParametersJson.put("GatewayId",gwId);
 
-                e.printStackTrace();
+                //System.out.println("your json is : "+urlParametersJson);
+                String url = "https://team12.dev.softwareengineeringii.com/api/gateway/newGateway";
+                String response;
+                try {
+                    response = Requests.sendPost(url, urlParametersJson);
+                    //System.out.println("response"+response);
+                    JSONParser jsonParser = new JSONParser();
+                    JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
+                    jsonObjectForToken = (JSONObject) jsonObject.get("Gateway");
+                    if(jsonObjectForToken!=null)
+                    {
+                        writeToFileGwIdAndToken(gwId,jsonObjectForToken);
+                    }
+                    if(jsonObjectForToken==null)
+                    {
+                        System.out.println("--Error-- Gateway is not found!! ");
+                    }
+
+
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
             }
-
         }
+
 
 
         Runnable runnable = new Runnable() {
@@ -64,12 +83,14 @@ public class MainEventLoop {
                 {
                     String response = Requests.sendPost(url, urlParametersJson);
                     System.out.println("response"+response);
+                    JSONParser jsonParser = new JSONParser();
+                    JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
 
                     // ON DEMAND DIAGNOSTIC
-                    onDemandDiagnostics (response);
+                    onDemandDiagnostics (jsonObject);
 
                     // DALIY DIAGNOSTIC
-                    dailyDiagnostics (response);
+                    dailyDiagnostics (jsonObject);
 
                     // check if there is daily diagnostics I need to run
                     checkForDailyDiagnostics ();
@@ -88,17 +109,11 @@ public class MainEventLoop {
     }
 
 
-    public static  void  writeToFileGwIdAndToken(String gwId, String response)
+
+    public static  void  writeToFileGwIdAndToken(String gwId, JSONObject jsonObjectForToken)
     {
         try {
-
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
-            JSONObject jsonObjectForToken = (JSONObject) jsonObject.get("Gateway");
-//			5bde7e392c7ac54bbdf5bbaa
-
-
-
+            //5bde7e392c7ac54bbdf5bbaa
             // write gwId to file
             try {
                 File gwIdFile = new File("gatewayID.txt");
@@ -129,13 +144,10 @@ public class MainEventLoop {
         }
     }
 
-    public static  void onDemandDiagnostics ( String response)
+    public static  void onDemandDiagnostics ( JSONObject jsonObject)
     {
         try
         {
-
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
             JSONArray jsonArray = (JSONArray) jsonObject.get("odd");
             if(jsonArray!=null)
             {
@@ -151,7 +163,7 @@ public class MainEventLoop {
                         urlParametersJson= ReadPython.readPython(odd);
                         System.out.println(urlParametersJson.toString());
                         String url="https://team12.dev.softwareengineeringii.com/api/gateway/diagnostic/test";
-                        response = Requests.sendPost(url, urlParametersJson);
+                        //response = Requests.sendPost(url, urlParametersJson);
                         System.out.println(Requests.sendPost(url, urlParametersJson));
 
                     }
@@ -163,12 +175,10 @@ public class MainEventLoop {
 
     }
 
-    public static  void dailyDiagnostics ( String response)
+    public static  void dailyDiagnostics ( JSONObject jsonObject)
     {
         try
         {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
             JSONArray jsonArrayForDaliy = (JSONArray) jsonObject.get("ddd");
             if(jsonArrayForDaliy!=null)
             {
