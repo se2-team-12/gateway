@@ -1,4 +1,4 @@
-import cpuBattery
+import battery
 import cpuCount
 import memory
 import timestamp
@@ -39,16 +39,16 @@ def test_cpuCount():
     format_test(rv, rv_type)
 
 
-def test_cpuBattery():
-    print("\ntest_cpuBattery()")
-    rv = cpuBattery.cpu_battery
+def test_battery():
+    print("\ntest_battery()")
+    rv = battery.battery
     rv_type = int
     format_test(rv, rv_type)
 
 
 def test_all():
     print("\nTesting ALL...")
-    test_cpuBattery()
+    test_battery()
     test_cpuCount()
     test_memory()
     test_timestamp()
@@ -71,7 +71,7 @@ def menu():
         if op == "1":
             test_all()
         elif op == "2":
-            test_cpuBattery()
+            test_battery()
         elif op == "3":
             test_cpuCount()
         elif op == "4":
