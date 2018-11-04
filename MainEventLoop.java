@@ -1,5 +1,4 @@
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -16,8 +15,8 @@ import java.util.Calendar;
 
 public class MainEventLoop {
 
-	public static void main(String[] args) 
-	{
+    public static void main(String[] args)
+    {
 
 
         //register GatewayId and get the token back
@@ -32,12 +31,12 @@ public class MainEventLoop {
             urlParametersJson.put("GatewayId",gwId);
 
             //System.out.println("your json is : "+urlParametersJson);
-            String url = "https://team12.softwareengineeringii.com/api/gateway/auth";
+            String url = "https://team12.dev.softwareengineeringii.com/api/gateway/newGateway";
             String response;
             try {
-                 response = Requests.sendPost(url, urlParametersJson);
-                 System.out.println("response"+response);
-                 writeToFileGwIdAndToken(gwId,response);
+                response = Requests.sendPost(url, urlParametersJson);
+                System.out.println("response"+response);
+                writeToFileGwIdAndToken(gwId,response);
             } catch (Exception e) {
 
                 e.printStackTrace();
@@ -46,47 +45,47 @@ public class MainEventLoop {
         }
 
 
-		Runnable runnable = new Runnable() {
-	    		public void run() {
+        Runnable runnable = new Runnable() {
+            public void run() {
 
 
-	    			JSONObject urlParametersJson = null;
-	    			try
-	    			{
-	    				urlParametersJson=ReadPython.readPython();
-	    			} catch (IOException | ParseException e1)
-	    			{
-	    				e1.printStackTrace();
-	    			}
-	    			System.out.println(urlParametersJson.toString());
-	    			String url = "https://team12.softwareengineeringii.com/api/gateway/heartbeat/"+ReadPython.reeadGatewayControllerID();
-	  
-	    			try
-                    {
-						String response = Requests.sendPost(url, urlParametersJson);
-						System.out.println("response"+response);
+                JSONObject urlParametersJson = null;
+                try
+                {
+                    urlParametersJson=ReadPython.readPython();
+                } catch (IOException | ParseException e1)
+                {
+                    e1.printStackTrace();
+                }
+                System.out.println(urlParametersJson.toString());
+                String url = "https://team12.dev.softwareengineeringii.com/api/gateway/heartbeat/"+ReadPython.reeadGatewayControllerID();
 
-                        // ON DEMAND DIAGNOSTIC
-                        onDemandDiagnostics (response);
+                try
+                {
+                    String response = Requests.sendPost(url, urlParametersJson);
+                    System.out.println("response"+response);
 
-                        // DALIY DIAGNOSTIC
-                        dailyDiagnostics (response);
+                    // ON DEMAND DIAGNOSTIC
+                    onDemandDiagnostics (response);
 
-                        // check if there is daily diagnostics I need to run
-                        checkForDailyDiagnostics ();
+                    // DALIY DIAGNOSTIC
+                    dailyDiagnostics (response);
 
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+                    // check if there is daily diagnostics I need to run
+                    checkForDailyDiagnostics ();
 
 
-	        }
-	    };
-	    
-	    ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-	    service.scheduleAtFixedRate(runnable, 0, 5, TimeUnit.SECONDS);
-	}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        };
+
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(runnable, 0, 5, TimeUnit.SECONDS);
+    }
 
 
     public static  void  writeToFileGwIdAndToken(String gwId, String response)
@@ -95,6 +94,10 @@ public class MainEventLoop {
 
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
+            JSONObject jsonObjectForToken = (JSONObject) jsonObject.get("Gateway");
+//			5bde7e392c7ac54bbdf5bbaa
+
+
 
             // write gwId to file
             try {
@@ -107,7 +110,7 @@ public class MainEventLoop {
                 e.printStackTrace();
             }
 
-            String token = (String)jsonObject.get("accesstoken");
+            String token = (String)jsonObjectForToken.get("token");
             try {
                 File tokenFile = new File("token.txt");
                 FileWriter fileWriter = new FileWriter(tokenFile);
@@ -117,11 +120,13 @@ public class MainEventLoop {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            //String message = (String)jsonObject.get("message");
+            //System.out.println("newGateway"+message);
 
-            } catch (Exception e) {
+        } catch (Exception e) {
 
-                e.printStackTrace();
-            }
+            e.printStackTrace();
+        }
     }
 
     public static  void onDemandDiagnostics ( String response)
@@ -145,7 +150,7 @@ public class MainEventLoop {
 
                         urlParametersJson= ReadPython.readPython(odd);
                         System.out.println(urlParametersJson.toString());
-                        String url="https://team12.softwareengineeringii.com/api/gateway/diagnostic/test";
+                        String url="https://team12.dev.softwareengineeringii.com/api/gateway/diagnostic/test";
                         response = Requests.sendPost(url, urlParametersJson);
                         System.out.println(Requests.sendPost(url, urlParametersJson));
 
@@ -171,7 +176,7 @@ public class MainEventLoop {
                 FileWriter fileWriter = new FileWriter(dailyDiagnosticsFile);
                 for (int i = 0; i < jsonArrayForDaliy.size(); i++) {
                     JSONObject dailyType=(JSONObject)jsonArrayForDaliy.get(i);
-                    String dd= (String)dailyType.get("DD");
+                    String dd= (String)dailyType.get("DDD");
                     fileWriter.write(dd + "\n");
                 }
                 fileWriter.close();
@@ -197,8 +202,9 @@ public class MainEventLoop {
     public static  void checkForDailyDiagnostics ( )
     {
         String filename = "dailyTime.txt";
+        File dailyDiagnosticsFile = new File("dailyDiagnostics.txt");
         File dailyTimeFile = new File(filename);
-        if (dailyTimeFile.length() != 0)
+        if (dailyTimeFile.length() != 0 && dailyDiagnosticsFile.length()!= 0 )
         {
 
 
@@ -256,7 +262,7 @@ public class MainEventLoop {
                 String url="";
                 try
                 {
-                    while(inputFile.hasNext())
+                    while(inputFile.hasNextLine())
                     {
                         String dd= inputFile.nextLine().trim();
 
@@ -265,7 +271,7 @@ public class MainEventLoop {
                             System.out.println("dd  :: "+dd);
                             urlParametersJson= ReadPython.readPython(dd);
                             System.out.println(urlParametersJson.toString());
-                            url="https://team12.softwareengineeringii.com/api/gateway/diagnostic/test";
+                            url="https://team12.dev.softwareengineeringii.com/api/gateway/dailyDiagnostic/test";
                             response = Requests.sendPost(url, urlParametersJson);
                             System.out.println(response);
 

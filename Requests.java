@@ -14,17 +14,18 @@ public class Requests {
 	// HTTP POST request
 	public static String sendPost(String url, JSONObject  urlParametersJson) throws Exception
 	{
-		
-		 
+
+
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 		//add reuqest header
-		con.setRequestProperty ("accesstoken", reeadAccessToken());
+		System.out.println("Token : " + readAccessToken());
+		con.setRequestProperty ("accesstoken", readAccessToken());
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-        	con.setRequestProperty("Accept", "application/json");
-      		con.setDoOutput(true);
-		
+		con.setRequestProperty("Accept", "application/json");
+		con.setDoOutput(true);
+
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 		wr.writeBytes(urlParametersJson.toString());
 		wr.flush();
@@ -33,7 +34,7 @@ public class Requests {
 		//System.out.println("\nSending 'POST' request to URL : " + url);
 		//System.out.println("Post parameters : " + urlParametersJson);
 		//System.out.println("Response Code : " + responseCode);
-		
+
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
@@ -42,13 +43,13 @@ public class Requests {
 			response.append(inputLine);
 		}
 		in.close();
-		
+
 		//print result
 		//System.out.println(response.toString());
-        return response.toString();
+		return response.toString();
 	}
 
-	public static  String reeadAccessToken()
+	public static  String readAccessToken()
 	{
 		String filename = "token.txt";
 		Scanner inputFile = null;
@@ -70,6 +71,6 @@ public class Requests {
 		inputFile.close();
 		return accessToken;
 	}
-	
+
 
 }
