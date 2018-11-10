@@ -1,4 +1,5 @@
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -13,36 +14,55 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 import java.util.Calendar;
 
-public class MainEventLoop {
+public class MainEventLoop{
 
+    @SuppressWarnings({ "unchecked", "resource" })
     public static void main(String[] args)
     {
-
-
-        //register GatewayId and get the token back
+        JSONObject jsonObjectForToken=null;
+        String gwId="";
         File file = new File("gatewayID.txt");
-        if (file.length() == 0) {
+        while(jsonObjectForToken==null && file.length() == 0 )
+        {
+            //register GatewayId and get the token back
 
-            Scanner reader = new Scanner(System.in);
-            System.out.println("Enter The GatewayId: ");
-            String gwId=reader.nextLine();
+            if (file.length() == 0) {
 
-            JSONObject urlParametersJson = new JSONObject();
-            urlParametersJson.put("GatewayId",gwId);
+                Scanner reader = new Scanner(System.in);
+                System.out.println("Enter your Gateway ID: ");
+                gwId=reader.nextLine();
 
-            //System.out.println("your json is : "+urlParametersJson);
-            String url = "https://team12.dev.softwareengineeringii.com/api/gateway/newGateway";
-            String response;
-            try {
-                response = Requests.sendPost(url, urlParametersJson);
-                System.out.println("response"+response);
-                writeToFileGwIdAndToken(gwId,response);
-            } catch (Exception e) {
+                JSONObject urlParametersJson = new JSONObject();
+                urlParametersJson.put("GatewayId",gwId);
 
-                e.printStackTrace();
+                //System.out.println("your json is : "+urlParametersJson);
+                String url = "https://team12.dev.softwareengineeringii.com/api/gateway/newGateway";
+                String response;
+                try {
+                    response = Requests.sendPost(url, urlParametersJson);
+                    System.out.println("response for initilizing gw id  "+response);
+                    JSONParser jsonParser = new JSONParser();
+                    JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
+                    jsonObjectForToken = (JSONObject) jsonObject.get("Gateway");
+                    if(jsonObjectForToken!=null)
+                    {
+                        writeToFileGwIdAndToken(gwId,jsonObjectForToken);
+                    }
+                    if(jsonObjectForToken==null)
+                    {
+                        System.out.println("--Error-- Gateway is not found!! ");
+                    }
+
+
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
             }
-
         }
+
 
 
         Runnable runnable = new Runnable() {
@@ -63,13 +83,15 @@ public class MainEventLoop {
                 try
                 {
                     String response = Requests.sendPost(url, urlParametersJson);
-                    System.out.println("response"+response);
+                    System.out.println("response for heartbeat"+response.toString());
+                    JSONParser jsonParser = new JSONParser();
+                    JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
 
                     // ON DEMAND DIAGNOSTIC
-                    onDemandDiagnostics (response);
+                    onDemandDiagnostics (jsonObject);
 
                     // DALIY DIAGNOSTIC
-                    dailyDiagnostics (response);
+                    dailyDiagnostics (jsonObject);
 
                     // check if there is daily diagnostics I need to run
                     checkForDailyDiagnostics ();
@@ -88,17 +110,11 @@ public class MainEventLoop {
     }
 
 
-    public static  void  writeToFileGwIdAndToken(String gwId, String response)
+
+    public static  void  writeToFileGwIdAndToken(String gwId, JSONObject jsonObjectForToken)
     {
         try {
-
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
-            JSONObject jsonObjectForToken = (JSONObject) jsonObject.get("Gateway");
-//			5bde7e392c7ac54bbdf5bbaa
-
-
-
+            //5bde7e392c7ac54bbdf5bbaa
             // write gwId to file
             try {
                 File gwIdFile = new File("gatewayID.txt");
@@ -120,8 +136,6 @@ public class MainEventLoop {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //String message = (String)jsonObject.get("message");
-            //System.out.println("newGateway"+message);
 
         } catch (Exception e) {
 
@@ -129,15 +143,13 @@ public class MainEventLoop {
         }
     }
 
-    public static  void onDemandDiagnostics ( String response)
+    public static  void onDemandDiagnostics ( JSONObject jsonObject)
     {
         try
         {
-
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
             JSONArray jsonArray = (JSONArray) jsonObject.get("odd");
-            if(jsonArray!=null)
+            System.out.println("jsonArrayForOndemand "+jsonArray);
+            if(jsonArray.size()!=0)
             {
                 for (int i = 0; i < jsonArray.size(); i++) {
                     JSONObject onDemandType=(JSONObject)jsonArray.get(i);
@@ -145,15 +157,14 @@ public class MainEventLoop {
 
                     if("cpuCount.py".equals(odd)||"memory.py".equals(odd)||"cpuBattery.py".equals(odd))
                     {
-                        //System.out.println("odd  :: "+odd);
+                        System.out.println("odd  :: "+odd);
                         JSONObject urlParametersJson = null;
 
                         urlParametersJson= ReadPython.readPython(odd);
                         System.out.println(urlParametersJson.toString());
                         String url="https://team12.dev.softwareengineeringii.com/api/gateway/diagnostic/test";
-                        response = Requests.sendPost(url, urlParametersJson);
-                        System.out.println(Requests.sendPost(url, urlParametersJson));
-
+                        String response = Requests.sendPost(url, urlParametersJson);
+                        System.out.println("response for onDemand "+response.toString());
                     }
                 }
             }
@@ -163,35 +174,50 @@ public class MainEventLoop {
 
     }
 
-    public static  void dailyDiagnostics ( String response)
+    public static  void dailyDiagnostics ( JSONObject jsonObject)
     {
         try
         {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
             JSONArray jsonArrayForDaliy = (JSONArray) jsonObject.get("ddd");
-            if(jsonArrayForDaliy!=null)
-            {
-                File dailyDiagnosticsFile = new File("dailyDiagnostics.txt");
-                FileWriter fileWriter = new FileWriter(dailyDiagnosticsFile);
-                for (int i = 0; i < jsonArrayForDaliy.size(); i++) {
-                    JSONObject dailyType=(JSONObject)jsonArrayForDaliy.get(i);
-                    String dd= (String)dailyType.get("DDD");
-                    fileWriter.write(dd + "\n");
+            System.out.println("jsonArrayForDaliy "+jsonArrayForDaliy);
+            try {
+                if(jsonArrayForDaliy.size()!=0)
+                {
+
+                    File dailyDiagnosticsFile = new File("dailyDiagnostics.txt");
+                    //File dailyTimeFile = new File("DDT.txt");
+                    FileWriter fileWriter = new FileWriter(dailyDiagnosticsFile);
+                    for (int i = 0; i < jsonArrayForDaliy.size(); i++) {
+                        JSONObject dailyType=(JSONObject)jsonArrayForDaliy.get(i);
+                        String dd= (String)dailyType.get("DDD");
+                        System.out.println("daily "+dd);
+                        fileWriter.write(dd + "\n");
+
+                        String dailyHour= (String)dailyType.get("dailyHour");
+                        String dailyMin= (String)dailyType.get("dailyMin");
+                        String dailySecond= (String)dailyType.get("dailySecond");
+
+                        File dDTFile = new File("DDT.txt");
+                        FileWriter fileWriterddt = new FileWriter(dDTFile);
+                        System.out.println(" time "+dailyHour+":"+dailyMin);
+                        fileWriterddt.write((dailyHour)+"\n");
+                        fileWriterddt.write((dailyMin)+"\n");
+                        fileWriterddt.write((dailySecond)+"\n");
+                        fileWriterddt.flush();
+                        fileWriterddt.close();
+
+                    }
+                    fileWriter.flush();
+                    fileWriter.close();
+
                 }
-                fileWriter.close();
-
-                JSONObject dailyHour=(JSONObject)jsonObject.get("dailyHour");
-                JSONObject dailyMin=(JSONObject)jsonObject.get("dailyMin");
-                JSONObject dailySecond=(JSONObject)jsonObject.get("dailySecond");
-
-                File dailyTimeFile = new File("dailyTime.txt");
-                fileWriter = new FileWriter(dailyTimeFile);
-                fileWriter.write(dailyHour + "\n");
-                fileWriter.write(dailyMin + "\n");
-                fileWriter.write(dailySecond + "\n");
-                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,7 +227,7 @@ public class MainEventLoop {
 
     public static  void checkForDailyDiagnostics ( )
     {
-        String filename = "dailyTime.txt";
+        String filename = "DDT.txt";
         File dailyDiagnosticsFile = new File("dailyDiagnostics.txt");
         File dailyTimeFile = new File(filename);
         if (dailyTimeFile.length() != 0 && dailyDiagnosticsFile.length()!= 0 )
@@ -223,17 +249,20 @@ public class MainEventLoop {
                 System.exit(0);
             }
 
-            if(inputFile.hasNext())
+            if(inputFile.hasNextInt())
             {
                 hour = inputFile.nextInt();
+                System.out.println("H "+hour);
             }
-            if(inputFile.hasNext())
+            if(inputFile.hasNextInt())
             {
                 min = inputFile.nextInt();
+                System.out.println("M "+min);
             }
-            if(inputFile.hasNext())
+            if(inputFile.hasNextInt())
             {
                 sec = inputFile.nextInt();
+                System.out.println("S "+sec);
             }
             inputFile.close();
 
@@ -242,8 +271,8 @@ public class MainEventLoop {
             System.out.println("The time is "+cal.get(Calendar.HOUR_OF_DAY)+":"
                     +cal.get(Calendar.MINUTE)+":"
                     +cal.get(Calendar.SECOND));
-
-            if(cal.get(Calendar.HOUR_OF_DAY) == hour && cal.get(Calendar.MINUTE) == min && cal.get(Calendar.SECOND) == sec )
+            // && cal.get(Calendar.SECOND) == sec
+            if(cal.get(Calendar.HOUR_OF_DAY) == hour && cal.get(Calendar.MINUTE) == min)
             {
                 //read the value from the file
 
@@ -273,7 +302,8 @@ public class MainEventLoop {
                             System.out.println(urlParametersJson.toString());
                             url="https://team12.dev.softwareengineeringii.com/api/gateway/dailyDiagnostic/test";
                             response = Requests.sendPost(url, urlParametersJson);
-                            System.out.println(response);
+                            System.out.println("response for daily "+response.toString());
+                            //System.out.println(response);
 
                         }
                     }

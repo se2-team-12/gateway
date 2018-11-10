@@ -19,7 +19,7 @@ public class Requests {
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 		//add reuqest header
-		System.out.println("Token : " + readAccessToken());
+		//System.out.println("Token : " + readAccessToken());
 		con.setRequestProperty ("accesstoken", readAccessToken());
 		con.setRequestMethod("POST");
 		con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
