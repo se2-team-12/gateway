@@ -1,7 +1,9 @@
 import battery
 import cpuCount
-import memory
+import availableMem
 import timestamp
+import osTest
+import freeMem
 
 
 def format_test(diagnostic, d_type):
@@ -17,6 +19,12 @@ def format_test(diagnostic, d_type):
     print("\n--------------------------------------")
     print("--------------------------------------")
 
+def test_osTest():
+    print("\ntest_osTest()")
+    rv = osTest.os
+    rv_type = str
+    format_test(rv, rv_type)
+
 
 def test_timestamp():
     print("\ntest_timestamp()")
@@ -27,9 +35,13 @@ def test_timestamp():
 
 def test_memory():
     print("\ntest_memory()")
-    rv = memory.available_mem
+    rv1 = availableMem.available_mem
+    rv2 = freeMem.free_mem
     rv_type = int
-    format_test(rv, rv_type)
+    print("\navailableMem test")
+    format_test(rv1, rv_type)
+    print("\nfreeMem test")
+    format_test(rv2, rv_type)
 
 
 def test_cpuCount():
@@ -62,10 +74,11 @@ def menu():
     while op != "e":
         print("\nOptions:")
         print("1 - test all")
-        print("2 - test cpuBattery")
+        print("2 - test battery")
         print("3 - test cpuCount")
         print("4 - test memory")
         print("5 - test timestamp")
+        print("6 - test osTest")
         print("e - Exit")
         op = input("")
         if op == "1":
@@ -78,6 +91,8 @@ def menu():
             test_memory()
         elif op == "5":
             test_timestamp()
+        elif op == "6":
+            test_osTest()
         elif op == "e":
             print("\nBye!")
             return
