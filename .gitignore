@@ -17,7 +17,7 @@
 *.zip
 *.tar.gz
 *.rar
-
+*.iml
 # Idea file
 .idea/workspace.xml
 
