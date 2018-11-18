@@ -17,7 +17,7 @@ public class ReadPython {
 
 		JSONObject json = new JSONObject();
 		json.put("GatewayId",reeadGatewayControllerID());
-		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/diagnostics.py");
+		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/timestamp.py");
 		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
 		json.put("TimeStamp",inDiagnostics.readLine());
 		json.put("Token",Requests.readAccessToken());
@@ -51,15 +51,15 @@ public class ReadPython {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static JSONObject readPython(String nameOfDemand) throws IOException, ParseException
+	public static JSONObject readPython(String nameOfDiagnostics) throws IOException, ParseException
 	{
 		JSONObject json = new JSONObject();
 		json.put("GatewayId",reeadGatewayControllerID());
-		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/"+nameOfDemand);
+		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/"+nameOfDiagnostics);
 		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
 		json.put("Type",inDiagnostics.readLine());
 		json.put("Result",inDiagnostics.readLine());
-		json.put("IsClear","true");
+		json.put("TimeStamp",inDiagnostics.readLine());
 		json.put("Token",Requests.readAccessToken());
 
 		return json;

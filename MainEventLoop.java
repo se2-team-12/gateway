@@ -1,5 +1,3 @@
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -14,7 +12,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 import java.util.Calendar;
 
-public class MainEventLoop{
+public class MainEventLoop {
 
     @SuppressWarnings({ "unchecked", "resource" })
     public static void main(String[] args)
@@ -34,8 +32,6 @@ public class MainEventLoop{
 
                 JSONObject urlParametersJson = new JSONObject();
                 urlParametersJson.put("GatewayId",gwId);
-
-                //System.out.println("your json is : "+urlParametersJson);
                 String url = "https://team12.dev.softwareengineeringii.com/api/gateway/newGateway";
                 String response;
                 try {
@@ -52,14 +48,10 @@ public class MainEventLoop{
                     {
                         System.out.println("--Error-- Gateway is not found!! ");
                     }
-
-
-
                 } catch (Exception e) {
 
                     e.printStackTrace();
                 }
-
             }
         }
 
@@ -77,7 +69,6 @@ public class MainEventLoop{
                 {
                     e1.printStackTrace();
                 }
-                System.out.println(urlParametersJson.toString());
                 String url = "https://team12.dev.softwareengineeringii.com/api/gateway/heartbeat/"+ReadPython.reeadGatewayControllerID();
 
                 try
@@ -95,18 +86,14 @@ public class MainEventLoop{
 
                     // check if there is daily diagnostics I need to run
                     checkForDailyDiagnostics ();
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
         };
 
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-        service.scheduleAtFixedRate(runnable, 0, 5, TimeUnit.SECONDS);
+        service.scheduleAtFixedRate(runnable, 0, 1, TimeUnit.SECONDS);
     }
 
 
@@ -114,7 +101,7 @@ public class MainEventLoop{
     public static  void  writeToFileGwIdAndToken(String gwId, JSONObject jsonObjectForToken)
     {
         try {
-            //5bde7e392c7ac54bbdf5bbaa
+            //5bf08ff7a19877292859d0c3
             // write gwId to file
             try {
                 File gwIdFile = new File("gatewayID.txt");
@@ -136,9 +123,7 @@ public class MainEventLoop{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         } catch (Exception e) {
-
             e.printStackTrace();
         }
     }
@@ -155,11 +140,9 @@ public class MainEventLoop{
                     JSONObject onDemandType=(JSONObject)jsonArray.get(i);
                     String odd= (String)onDemandType.get("ODD");
 
-                    if("cpuCount.py".equals(odd)||"memory.py".equals(odd)||"cpuBattery.py".equals(odd))
+                    if("cpuCount.py".equals(odd)||"freeMem.py".equals(odd)||"battery.py".equals(odd)||"availableMem.py".equals(odd))
                     {
-                        System.out.println("odd  :: "+odd);
                         JSONObject urlParametersJson = null;
-
                         urlParametersJson= ReadPython.readPython(odd);
                         System.out.println(urlParametersJson.toString());
                         String url="https://team12.dev.softwareengineeringii.com/api/gateway/diagnostic/test";
@@ -171,7 +154,6 @@ public class MainEventLoop{
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static  void dailyDiagnostics ( JSONObject jsonObject)
@@ -185,7 +167,6 @@ public class MainEventLoop{
                 {
 
                     File dailyDiagnosticsFile = new File("dailyDiagnostics.txt");
-                    //File dailyTimeFile = new File("DDT.txt");
                     FileWriter fileWriter = new FileWriter(dailyDiagnosticsFile);
                     for (int i = 0; i < jsonArrayForDaliy.size(); i++) {
                         JSONObject dailyType=(JSONObject)jsonArrayForDaliy.get(i);
@@ -205,24 +186,16 @@ public class MainEventLoop{
                         fileWriterddt.write((dailySecond)+"\n");
                         fileWriterddt.flush();
                         fileWriterddt.close();
-
                     }
                     fileWriter.flush();
                     fileWriter.close();
-
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static  void checkForDailyDiagnostics ( )
@@ -252,37 +225,30 @@ public class MainEventLoop{
             if(inputFile.hasNextInt())
             {
                 hour = inputFile.nextInt();
-                System.out.println("H "+hour);
             }
             if(inputFile.hasNextInt())
             {
                 min = inputFile.nextInt();
-                System.out.println("M "+min);
             }
             if(inputFile.hasNextInt())
             {
                 sec = inputFile.nextInt();
-                System.out.println("S "+sec);
             }
             inputFile.close();
 
-
             Calendar cal = Calendar.getInstance();
-            System.out.println("The time is "+cal.get(Calendar.HOUR_OF_DAY)+":"
-                    +cal.get(Calendar.MINUTE)+":"
-                    +cal.get(Calendar.SECOND));
-            // && cal.get(Calendar.SECOND) == sec
-            if(cal.get(Calendar.HOUR_OF_DAY) == hour && cal.get(Calendar.MINUTE) == min)
+//            System.out.println("The time is "+cal.get(Calendar.HOUR_OF_DAY)+":"
+//                    +cal.get(Calendar.MINUTE)+":"
+//                    +cal.get(Calendar.SECOND));
+//             && cal.get(Calendar.SECOND) == sec
+            if(cal.get(Calendar.HOUR_OF_DAY) == hour && cal.get(Calendar.MINUTE) == min && cal.get(Calendar.SECOND) == sec )
             {
                 //read the value from the file
-
                 filename ="dailyDiagnostics.txt";
                 try {
                     inputFile = new Scanner(new File(filename));
-
                 }catch(FileNotFoundException e) {
-                    System.out.println("FAILURE cannot open file: " + filename + " for input" +
-                            " EXIT ON FAILURE TO OPEN FILE.");
+                    System.out.println("FAILURE cannot open file: " + filename + " for input" + " EXIT ON FAILURE TO OPEN FILE.");
                     System.exit(0);
                 }
 
@@ -294,8 +260,7 @@ public class MainEventLoop{
                     while(inputFile.hasNextLine())
                     {
                         String dd= inputFile.nextLine().trim();
-
-                        if("cpuCount.py".equals(dd)||"memory.py".equals(dd)||"cpuBattery.py".equals(dd))
+                        if("cpuCount.py".equals(dd)||"freeMem.py".equals(dd)||"battery.py".equals(dd)||"availableMem.py".equals(dd))
                         {
                             System.out.println("dd  :: "+dd);
                             urlParametersJson= ReadPython.readPython(dd);
@@ -303,11 +268,10 @@ public class MainEventLoop{
                             url="https://team12.dev.softwareengineeringii.com/api/gateway/dailyDiagnostic/test";
                             response = Requests.sendPost(url, urlParametersJson);
                             System.out.println("response for daily "+response.toString());
-                            //System.out.println(response);
-
                         }
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
             }
