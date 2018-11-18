@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -141,7 +142,7 @@ public class MainEventLoop {
                     JSONObject onDemandType=(JSONObject)jsonArray.get(i);
                     String odd= (String)onDemandType.get("ODD");
 
-                    if("cpuCount.py".equals(odd)||"freeMem.py".equals(odd)||"battery.py".equals(odd)||"availableMem.py".equals(odd))
+                    if("cpuCount.py".equals(odd)||"freeMem.py".equals(odd)||"battery.py".equals(odd)||"availableMem.py".equals(odd)||"osTest.py".equals(odd))
                     {
                         JSONObject urlParametersJson = null;
                         urlParametersJson= ReadPython.readPython(odd);
@@ -172,7 +173,7 @@ public class MainEventLoop {
                     for (int i = 0; i < jsonArrayForDaliy.size(); i++) {
                         JSONObject dailyType=(JSONObject)jsonArrayForDaliy.get(i);
                         String dd= (String)dailyType.get("DDD");
-                        System.out.println("daily "+dd);
+                        // System.out.println("daily "+dd);
                         fileWriter.write(dd + "\n");
 
                         String dailyHour= (String)dailyType.get("dailyHour");
@@ -261,7 +262,7 @@ public class MainEventLoop {
                     while(inputFile.hasNextLine())
                     {
                         String dd= inputFile.nextLine().trim();
-                        if("cpuCount.py".equals(dd)||"freeMem.py".equals(dd)||"battery.py".equals(dd)||"availableMem.py".equals(dd))
+                        if("cpuCount.py".equals(dd)||"freeMem.py".equals(dd)||"battery.py".equals(dd)||"availableMem.py".equals(dd) ||"osTest.py".equals(dd))
                         {
                             System.out.println("dd  :: "+dd);
                             urlParametersJson= ReadPython.readPython(dd);
