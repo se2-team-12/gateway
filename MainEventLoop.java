@@ -73,6 +73,7 @@ public class MainEventLoop {
 
                 try
                 {
+                    System.out.println(urlParametersJson.toString());
                     String response = Requests.sendPost(url, urlParametersJson);
                     System.out.println("response for heartbeat"+response.toString());
                     JSONParser jsonParser = new JSONParser();

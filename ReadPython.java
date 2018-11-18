@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,7 +58,10 @@ public class ReadPython {
 		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
 		json.put("Type",inDiagnostics.readLine());
 		json.put("Result",inDiagnostics.readLine());
-		json.put("TimeStamp",inDiagnostics.readLine());
+
+		Process heartbeat = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/timestamp.py");
+		BufferedReader timeStamp = new BufferedReader(new InputStreamReader(heartbeat.getInputStream()));
+		json.put("TimeStamp",timeStamp.readLine());
 		json.put("Token",Requests.readAccessToken());
 
 		return json;
