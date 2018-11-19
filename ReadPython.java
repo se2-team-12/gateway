@@ -16,7 +16,7 @@ public class ReadPython {
 
 		JSONObject json = new JSONObject();
 		json.put("GatewayId",reeadGatewayControllerID());
-		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/timestamp.py");
+		Process pDiagnostics = Runtime.getRuntime().exec("python timestamp.py");
 		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
 		json.put("TimeStamp",inDiagnostics.readLine());
 		json.put("Token",Requests.readAccessToken());
@@ -54,7 +54,7 @@ public class ReadPython {
 	{
 		JSONObject json = new JSONObject();
 		json.put("GatewayId",reeadGatewayControllerID());
-		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/"+nameOfDiagnostics);
+		Process pDiagnostics = Runtime.getRuntime().exec("python "+nameOfDiagnostics);
 		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
 		json.put("Type",inDiagnostics.readLine());
 		json.put("Result",inDiagnostics.readLine());
