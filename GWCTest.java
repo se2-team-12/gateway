@@ -86,7 +86,7 @@ public class GWCTest {
                 e1.printStackTrace();
             }
             //System.out.println(urlParametersJson.toString());
-            String url = "https://team12.dev.softwareengineeringii.com/api/gateway/heartbeat/"+ReadPython.reeadGatewayControllerID();
+            String url = "https://team12.dev.softwareengineeringii.com/api/gateway/heartbeat/"+ReadPython.readGatewayControllerID();
 
             try
             {
