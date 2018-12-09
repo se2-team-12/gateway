@@ -61,7 +61,7 @@ public class MainEventLoop {
         }
 
 
-
+        
         Runnable runnable = new Runnable() {
             public void run() {
 
@@ -181,7 +181,7 @@ public class MainEventLoop {
                         String dailyMin= (String)dailyType.get("dailyMin");
                         String dailySecond= (String)dailyType.get("dailySecond");
 
-
+                        
                         FileWriter fileWriterddt = new FileWriter(dDTFile.getAbsoluteFile(),true);
                         fileWriterddt.write((dailyHour)+"\n");
                         fileWriterddt.write((dailyMin)+"\n");
@@ -209,7 +209,7 @@ public class MainEventLoop {
         int sec=0;
         int count = 0;
         //read the value from the file
-        try
+        try 
         {
             inputFile = new Scanner(new File(filename));
         }catch(FileNotFoundException e)
@@ -218,64 +218,63 @@ public class MainEventLoop {
                     " EXIT ON FAILURE TO OPEN FILE.");
             System.exit(0);
         }
-
+        
         FileInputStream fstream = new FileInputStream("dailyDiagnostics.txt");
         BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
         String strLine;
 
-        while ((strLine = br.readLine()) != null)   {
+	      while ((strLine = br.readLine()) != null)   {
 
-            //System.out.println (strLine);
-            if (dDTFile.length() != 0 && dailyDiagnosticsFile.length()!= 0 )
-            {
-                filename = "DDT.txt";
-                if(inputFile.hasNextInt())
-                {
-                    hour = inputFile.nextInt();
-                }
-                if(inputFile.hasNextInt())
-                {
-                    min = inputFile.nextInt();
-                }
-                if(inputFile.hasNextInt())
-                {
-                    sec = inputFile.nextInt();
-                }
-                //inputFile.close();
-                count++;
+	        //System.out.println (strLine);
+	        if (dDTFile.length() != 0 && dailyDiagnosticsFile.length()!= 0 )
+	        {
+	        		filename = "DDT.txt";
+	            if(inputFile.hasNextInt())
+	            {
+	                hour = inputFile.nextInt();
+	            }
+	            if(inputFile.hasNextInt())
+	            {
+	                min = inputFile.nextInt();
+	            }
+	            if(inputFile.hasNextInt())
+	            {
+	                sec = inputFile.nextInt();
+	            }
+	            //inputFile.close();
+	            count++;
+	        
+	            Calendar cal = Calendar.getInstance();
+	            if(cal.get(Calendar.HOUR_OF_DAY) == hour
+	            		&& cal.get(Calendar.MINUTE) == min
+	            		&& cal.get(Calendar.SECOND) == sec )
+	            {
+	            		String dd = Files.readAllLines(Paths.get("dailyDiagnostics.txt")).get(count-1);
+	                JSONObject urlParametersJson = new JSONObject();
+	                String response="";
+	                String url="";
+	                try
+	                {
+	                		if("cpuCount.py".equals(dd)||"freeMem.py".equals(dd)||"battery.py".equals(dd)||"availableMem.py".equals(dd) ||"osTest.py".equals(dd))
+	                        {
+	                            //System.out.println("dd  in check daily :: "+dd);
+	                            urlParametersJson= ReadPython.readPython(dd);
+	                            //System.out.println(urlParametersJson.toString());
+	                            url="https://team12.staging.softwareengineeringii.com/api/gateway/dailyDiagnostic/test";
+	                            response = Requests.sendPost(url, urlParametersJson);
+	                            System.out.println("response for daily "+response.toString());
+	                        }
+	                }
+	                catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
 
-                Calendar cal = Calendar.getInstance();
-                if(cal.get(Calendar.HOUR_OF_DAY) == hour
-                        && cal.get(Calendar.MINUTE) == min
-                        && cal.get(Calendar.SECOND) == sec )
-                {
-                    String dd = Files.readAllLines(Paths.get("dailyDiagnostics.txt")).get(count-1);
-                    JSONObject urlParametersJson = new JSONObject();
-                    String response="";
-                    String url="";
-                    try
-                    {
-                        if("cpuCount.py".equals(dd)||"freeMem.py".equals(dd)||"battery.py".equals(dd)||"availableMem.py".equals(dd) ||"osTest.py".equals(dd))
-                        {
-                            //System.out.println("dd  in check daily :: "+dd);
-                            urlParametersJson= ReadPython.readPython(dd);
-                            //System.out.println(urlParametersJson.toString());
-                            url="https://team12.staging.softwareengineeringii.com/api/gateway/dailyDiagnostic/test";
-                            response = Requests.sendPost(url, urlParametersJson);
-                            System.out.println("response for daily "+response.toString());
-                        }
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
 
 
-
-            }
-        }
-
-        br.close();
+	        }
+	      }
+	      br.close();
 
     }
 
