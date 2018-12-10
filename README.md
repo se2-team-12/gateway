@@ -21,18 +21,18 @@ cmd.exe and install it:
     pip install psutil
 
 ## Diagnostics
-availableMem.py --> int available memory
+availableMem.py --> **int** available memory
 
-cpuCount.py --> int cpus
+cpuCount.py --> **int** cpus
 
-battery.py --> int battery (200% means the gateway hardware does not have a battery)
+battery.py --> **int** battery (200% means the gateway hardware does not have a battery)
 
-osTest.py --> str os - Windows, Linux, or MacOS
+osTest.py --> **str** os - Windows, Linux, or MacOS
 
-freeMem.py --> int free memory
+freeMem.py --> **int** free memory
 
-additionFPU.py --> bool CPU in good health?
+additionFPU.py --> **bool** CPU in good health?
 
-primeNumber.py --> int number of prime #s generated
+primeNumber.py --> **int** number of prime #s generated
 
-timestamp.py --> float epoch
+timestamp.py --> **float** epoch
