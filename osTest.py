@@ -12,5 +12,5 @@ elif isLinux:
     os = 'Linux'
 elif isWindows:
     os = 'Windows'
-
+print("Operating system")
 print(os)

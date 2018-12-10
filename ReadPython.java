@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,8 +15,8 @@ public class ReadPython {
 	{
 
 		JSONObject json = new JSONObject();
-		json.put("GatewayId",reeadGatewayControllerID());
-		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/diagnostics.py");
+		json.put("GatewayId",readGatewayControllerID());
+		Process pDiagnostics = Runtime.getRuntime().exec("python timestamp.py");
 		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
 		json.put("TimeStamp",inDiagnostics.readLine());
 		json.put("Token",Requests.readAccessToken());
@@ -27,7 +26,7 @@ public class ReadPython {
 	}
 
 
-	public static  String reeadGatewayControllerID()
+	public static  String readGatewayControllerID()
 	{
 		String filename = "gatewayID.txt";
 		Scanner inputFile = null;
@@ -51,15 +50,18 @@ public class ReadPython {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static JSONObject readPython(String nameOfDemand) throws IOException, ParseException
+	public static JSONObject readPython(String nameOfDiagnostics) throws IOException, ParseException
 	{
 		JSONObject json = new JSONObject();
-		json.put("GatewayId",reeadGatewayControllerID());
-		Process pDiagnostics = Runtime.getRuntime().exec("python /Users/batoolalsmael/Desktop/SW#2/gateway/"+nameOfDemand);
+		json.put("GatewayId",readGatewayControllerID());
+		Process pDiagnostics = Runtime.getRuntime().exec("python "+nameOfDiagnostics);
 		BufferedReader inDiagnostics = new BufferedReader(new InputStreamReader(pDiagnostics.getInputStream()));
 		json.put("Type",inDiagnostics.readLine());
 		json.put("Result",inDiagnostics.readLine());
-		json.put("IsClear","true");
+
+		Process heartbeat = Runtime.getRuntime().exec("python timestamp.py");
+		BufferedReader timeStamp = new BufferedReader(new InputStreamReader(heartbeat.getInputStream()));
+		json.put("TimeStamp",timeStamp.readLine());
 		json.put("Token",Requests.readAccessToken());
 
 		return json;
